@@ -1,11 +1,11 @@
 package co.com.proyectos.adminproyectos.controllers;
 
+import co.com.proyectos.adminproyectos.models.Project;
 import co.com.proyectos.adminproyectos.models.User;
 import co.com.proyectos.adminproyectos.repositories.UserRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +30,27 @@ public class UserController {
     @GetMapping("/participantes")
     List<User> findAll(){
         return userRepository.findAll();
+    }
+
+    @PostMapping("/participante")
+    User newUser(@RequestBody User user){
+        return userRepository.save(user);
+    }
+
+    @PutMapping("/participantes/{userId}")
+    User updateUser(@RequestBody User newUser, @PathVariable String userId) {
+
+        return userRepository.findById(userId)
+                .map(user -> {
+                    user.setRol(newUser.getRol());
+                    user.setEstado(newUser.getEstado());
+                    user.setEdad(newUser.getEdad());
+                    return userRepository.save(user);
+                })
+                .orElseGet(() -> {
+                    newUser.setUserId(userId);
+                    return userRepository.save(newUser);
+                });
     }
 
 }
