@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ProjectController {
@@ -39,6 +40,11 @@ public class ProjectController {
     @GetMapping("/proyectos")
     List<Project> getProjects(){
         return projectRepository.findAll();
+    }
+
+    @GetMapping("/proyecto/{projectId}")
+    Optional<Project> getProjects(@PathVariable String projectId){
+        return projectRepository.findById(projectId);
     }
 
     @PutMapping("/proyectos/{projectId}")
